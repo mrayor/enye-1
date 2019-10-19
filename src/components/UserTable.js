@@ -16,7 +16,7 @@ const columns = [
     render: text => <p>{text}</p>
   },
   {
-    title: "Date",
+    title: "Date of Birth",
     dataIndex: "date",
     key: "date",
     render: text => <p>{text}</p>
