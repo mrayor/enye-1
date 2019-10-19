@@ -43,7 +43,7 @@ class UserTable extends Component {
           const { users } = value;
           return (
             <div className="table-padding">
-              <Table columns={columns} dataSource={users} />
+              <Table columns={columns} dataSource={users} pagination={false} />
             </div>
           );
         }}

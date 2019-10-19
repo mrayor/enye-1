@@ -5,22 +5,24 @@ import moment from "moment";
 import uuid from "uuid";
 
 class UserForm extends Component {
-  getAge = (date, dateString) => {
-    if (dateString === "") return;
-    const { setFieldsValue } = this.props.form;
-    let today = new Date();
-    let birthDate = new Date(dateString);
+  // getAge = (date, dateString) => {
+  //   if (dateString === "") {
+  //     return;
+  //   }
+  //   const { setFieldsValue } = this.props.form;
+  //   let today = new Date();
+  //   let birthDate = new Date(dateString);
 
-    let age = today.getFullYear() - birthDate.getFullYear();
-    let m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age = age - 1;
-    }
-    if (age < 0 || age === 0) {
-      setFieldsValue({ age: 0 });
-    }
-    setFieldsValue({ age });
-  };
+  //   let age = today.getFullYear() - birthDate.getFullYear();
+  //   let m = today.getMonth() - birthDate.getMonth();
+  //   if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+  //     age = age - 1;
+  //   }
+  //   if (age < 0 || age === 0) {
+  //     throw alert("Please select a valid date of birth");
+  //   }
+  //   setFieldsValue({ age });
+  // };
 
   handleSubmit = (dispatch, e) => {
     e.preventDefault();
@@ -28,9 +30,9 @@ class UserForm extends Component {
       if (err) {
         return;
       }
-      if (fieldsValue["age"] === 0) {
-        throw alert("Age cannot be zero");
-      }
+      // if (fieldsValue["age"] === 0) {
+      //   throw alert("Age cannot be zero");
+      // }
       const newUser = {
         key: uuid(),
         date: fieldsValue["datePicker"].format("MM-DD-YYYY"),
@@ -84,13 +86,13 @@ class UserForm extends Component {
                   </Form.Item>
                   <Row type="flex" justify="space-between">
                     <Col xs={12} md={18}>
-                      <Form.Item label="Date Picker">
+                      <Form.Item label="Date of Birth">
                         {getFieldDecorator("datePicker", config)(
                           <DatePicker
                             className="w-full"
                             showToday={false}
                             format="MM-DD-YYYY"
-                            onChange={this.getAge}
+                            // onChange={this.getAge}
                             disabledDate={this.disabledDate}
                           />
                         )}
