@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import { Table } from "antd";
-import { Consumer } from "../context";
+import { useSelector } from "react-redux";
 
 const columns = [
   {
@@ -35,20 +35,13 @@ const columns = [
   }
 ];
 
-class UserTable extends Component {
-  render() {
-    return (
-      <Consumer>
-        {value => {
-          const { users } = value;
-          return (
-            <div className="table-padding">
-              <Table columns={columns} dataSource={users} pagination={false} />
-            </div>
-          );
-        }}
-      </Consumer>
-    );
-  }
-}
+const UserTable = () => {
+  const users = useSelector(state => state.user.users);
+  return (
+    <div className="table-padding">
+      <Table columns={columns} dataSource={users} pagination={false} />
+    </div>
+  );
+};
+
 export default UserTable;
