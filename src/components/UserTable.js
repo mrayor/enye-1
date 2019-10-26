@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import database from "../firebase/config";
 import { Table } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { getUsers } from "../actions/userActions";
 
 const columns = [
+  {
+    title: "User ID",
+    dataIndex: "key",
+    key: "key",
+    render: text => <p>{text}</p>
+  },
   {
     title: "First Name",
     dataIndex: "firstName",
@@ -17,8 +25,8 @@ const columns = [
   },
   {
     title: "Date of Birth",
-    dataIndex: "date",
-    key: "date",
+    dataIndex: "dateOfBirth",
+    key: "dateOfBirth",
     render: text => <p>{text}</p>
   },
   {
@@ -36,10 +44,23 @@ const columns = [
 ];
 
 const UserTable = () => {
-  const users = useSelector(state => state.user.users);
+  const [users, setUsers] = useState([]);
+  const dispatch = useDispatch();
+  const listener = database.ref().child("users");
+  useEffect(() => {
+    const handleNewUsers = snap => {
+      if (snap.val()) setUsers(snap.val());
+    };
+    listener.on("value", handleNewUsers);
+    return () => {
+      listener.off("value", handleNewUsers);
+    };
+  }, []);
+  dispatch(getUsers());
+  const usersArray = Object.values(users);
   return (
     <div className="table-padding">
-      <Table columns={columns} dataSource={users} pagination={false} />
+      <Table columns={columns} dataSource={usersArray} pagination={false} />
     </div>
   );
 };

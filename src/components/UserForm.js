@@ -1,11 +1,12 @@
 import React from "react";
 import { Form, Input, DatePicker, Button, InputNumber, Row, Col } from "antd";
 import moment from "moment";
-import uuid from "uuid";
+import uuidv5 from "uuid";
 import { useDispatch } from "react-redux";
-import { ADD_USER } from "../actions/types";
+import { addUser } from "../actions/userActions";
 
 const UserForm = props => {
+  const NAMESPACE = "01885526-7341-44a0-9d38-2a7cfdad9ca5";
   const dispatch = useDispatch();
   const handleSubmit = e => {
     e.preventDefault();
@@ -13,12 +14,16 @@ const UserForm = props => {
       if (err) {
         return;
       }
+      let date = fieldsValue["datePicker"].format("MM-DD-YYYY");
       const newUser = {
-        key: uuid(),
-        date: fieldsValue["datePicker"].format("MM-DD-YYYY"),
-        ...fieldsValue
+        key: uuidv5("usersUUID", NAMESPACE),
+        firstName: fieldsValue["firstName"],
+        lastName: fieldsValue["lastName"],
+        dateOfBirth: date.toString(),
+        age: fieldsValue["age"],
+        hobby: fieldsValue["hobby"]
       };
-      dispatch({ type: ADD_USER, payload: newUser });
+      dispatch(addUser(newUser));
       props.form.resetFields();
     });
   };
