@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import database from "../firebase/config";
+import uuid from "uuid";
 import { Table } from "antd";
 import { useDispatch } from "react-redux";
 import { getUsers } from "../actions/userActions";
@@ -46,14 +47,14 @@ const columns = [
 const UserTable = () => {
   const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
-  const listener = database.ref().child("users");
+  const usersRef = database.ref().child("users");
   useEffect(() => {
     const handleNewUsers = snap => {
       if (snap.val()) setUsers(snap.val());
     };
-    listener.on("value", handleNewUsers);
+    usersRef.on("value", handleNewUsers);
     return () => {
-      listener.off("value", handleNewUsers);
+      usersRef.off("value", handleNewUsers);
     };
   }, []);
   dispatch(getUsers());
