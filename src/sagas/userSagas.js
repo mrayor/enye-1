@@ -4,9 +4,12 @@ import {
   getUsersSuccess,
   getUsersError,
   addUserError,
-  addUserSuccess
+  addUserSuccess,
+  update
 } from "../actions/userActions";
-import { put, takeEvery, call, all } from "redux-saga/effects";
+import database from "../firebase/config";
+import { put, takeEvery, call, all, take, fork } from "redux-saga/effects";
+import { eventChannel } from "redux-saga";
 
 function* getUserSaga() {
   try {
@@ -26,6 +29,23 @@ function* addUserSaga(action) {
   }
 }
 
+function createEventChannel() {
+  const userRef = database.ref("users");
+  const listener = eventChannel(emit => {
+    userRef.on("value", snapshot => emit(snapshot.val() || {}));
+    return () => listener.off();
+  });
+  return listener;
+}
+
+function* updateUserSaga() {
+  const updateChannel = createEventChannel();
+  while (true) {
+    const users = yield take(updateChannel);
+    yield put(update(users));
+  }
+}
+
 function* watchUserSaga() {
   yield takeEvery(GET_USERS, getUserSaga);
 }
@@ -35,7 +55,11 @@ function* watchAddUserSaga() {
 }
 
 function* userSaga() {
-  yield all([call(watchUserSaga), call(watchAddUserSaga)]);
+  yield all([
+    call(watchUserSaga),
+    call(watchAddUserSaga),
+    fork(updateUserSaga)
+  ]);
 }
 
 export default userSaga;

@@ -4,7 +4,8 @@ import {
   GET_USERS,
   ADD_USER,
   ADD_USER_ERROR,
-  ADD_USER_SUCCESS
+  ADD_USER_SUCCESS,
+  UPDATED
 } from "./types";
 
 export const getUsers = () => {
@@ -24,4 +25,7 @@ export const addUserSuccess = user => {
 };
 export const addUserError = error => {
   return { type: ADD_USER_ERROR, payload: error };
+};
+export const update = user => {
+  return { type: UPDATED, payload: user };
 };

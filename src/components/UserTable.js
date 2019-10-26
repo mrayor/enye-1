@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import database from "../firebase/config";
-import uuid from "uuid";
+import React, { useEffect } from "react";
 import { Table } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUsers } from "../actions/userActions";
 
 const columns = [
@@ -45,19 +43,11 @@ const columns = [
 ];
 
 const UserTable = () => {
-  const [users, setUsers] = useState([]);
   const dispatch = useDispatch();
-  const usersRef = database.ref().child("users");
+  const users = useSelector(state => state.user.users);
   useEffect(() => {
-    const handleNewUsers = snap => {
-      if (snap.val()) setUsers(snap.val());
-    };
-    usersRef.on("value", handleNewUsers);
-    return () => {
-      usersRef.off("value", handleNewUsers);
-    };
-  }, []);
-  dispatch(getUsers());
+    dispatch(getUsers());
+  }, [dispatch]);
   const usersArray = Object.values(users);
   return (
     <div className="table-padding">
